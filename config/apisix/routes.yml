@@ -1,0 +1,21 @@
+upstreams:
+  - id: v1
+    nodes:
+      "v1:8080": 1
+  - id: v2
+    nodes:
+      "v2:8080": 1
+routes:
+  - id: 1
+    uri: /*
+    upstream_id: v1
+    plugins:
+      traffic-split:
+        rules:
+          - match:
+              - vars: [["http_X-Canary","~=","Let-Me-Go-To-v2"]]
+          - weighted_upstreams:
+            - upstream_id: v2
+              weight: 50
+            - weight: 50
+#END
